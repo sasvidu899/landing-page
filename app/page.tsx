@@ -23,6 +23,21 @@ import { useInView } from "@/hooks/use-in-view"
 import { cn } from "@/lib/utils"
 import { ThemeToggle } from "@/components/theme-toggle"
 
+// Import the animated SVG components at the top of the file
+import {
+  LogoAnimation,
+  HeroIllustration,
+  AnalyticsIllustration,
+  AutomationIllustration,
+  PerformanceIllustration,
+  ReportsIllustration,
+  StarterPlanIllustration,
+  ProPlanIllustration,
+  EnterprisePlanIllustration,
+  WavyBackground,
+} from "@/components/animated-svgs"
+import { TestimonialCarousel } from "@/components/testimonial-carousel"
+
 export default function LandingPage() {
   return (
     <div className="flex min-h-screen flex-col">
@@ -60,14 +75,8 @@ function Header() {
     >
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="relative w-8 h-8 overflow-hidden rounded-md">
-            <Image
-              src="https://v0.blob.com/aNJXh.png"
-              alt="StreamLine Logo"
-              width={32}
-              height={32}
-              className="object-cover transition-transform duration-500 hover:scale-110 dark:brightness-110"
-            />
+          <div className="relative w-8 h-8 overflow-hidden">
+            <LogoAnimation />
           </div>
           <span className="text-xl font-bold">StreamLine</span>
         </div>
@@ -139,14 +148,8 @@ function MobileNav() {
           <div className="fixed inset-y-0 right-0 w-full max-w-xs bg-background p-6 shadow-lg animate-in slide-in-from-right duration-300 border-l">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-2">
-                <div className="relative w-8 h-8 overflow-hidden rounded-md">
-                  <Image
-                    src="https://v0.blob.com/aNJXh.png"
-                    alt="StreamLine Logo"
-                    width={32}
-                    height={32}
-                    className="object-cover dark:brightness-110"
-                  />
+                <div className="relative w-8 h-8 overflow-hidden">
+                  <LogoAnimation />
                 </div>
                 <span className="text-xl font-bold">StreamLine</span>
               </div>
@@ -210,6 +213,7 @@ function HeroSection() {
 
   return (
     <section className="relative py-20 md:py-32 overflow-hidden bg-gradient-to-b from-background to-muted/30 dark:from-background dark:to-muted/10">
+      <WavyBackground />
       {/* Decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-1/4 -right-1/4 w-1/2 h-1/2 bg-primary/5 rounded-full blur-3xl animate-pulse"></div>
@@ -278,17 +282,14 @@ function HeroSection() {
               className="absolute inset-0 -m-4 rounded-xl bg-gradient-to-l from-primary/20 to-secondary/20 blur-xl opacity-50 transform -rotate-2 animate-pulse"
               style={{ animationDelay: "1s" }}
             ></div>
-            <Image
-              src="https://v0.blob.com/aNJXi.png"
-              alt="Dashboard Preview"
-              width={550}
-              height={550}
+            <div
               className={cn(
-                "rounded-xl object-cover shadow-2xl relative z-10 border border-muted transition-all duration-1000 transform dark:border-muted/20",
+                "rounded-xl shadow-2xl relative z-10 border border-muted transition-all duration-1000 transform dark:border-muted/20",
                 isInView ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10",
               )}
-              priority
-            />
+            >
+              <HeroIllustration />
+            </div>
             <div
               className="absolute -bottom-4 -right-4 h-24 w-24 rounded-full bg-primary/10 backdrop-blur-md border border-primary/20 flex items-center justify-center transform rotate-12 animate-bounce"
               style={{ animationDuration: "3s" }}
@@ -312,28 +313,28 @@ function FeaturesSection() {
       title: "Advanced Analytics",
       description:
         "Gain valuable insights with our comprehensive analytics dashboard. Track performance, identify trends, and make data-driven decisions.",
-      image: "https://v0.blob.com/aNJXj.png",
+      illustration: <AnalyticsIllustration />,
     },
     {
       icon: <Zap className="h-10 w-10 text-primary" />,
       title: "Automation Tools",
       description:
         "Save time and reduce errors with our powerful automation tools. Set up workflows, automate repetitive tasks, and focus on what matters.",
-      image: "https://v0.blob.com/aNJXk.png",
+      illustration: <AutomationIllustration />,
     },
     {
       icon: <LineChart className="h-10 w-10 text-primary" />,
       title: "Performance Tracking",
       description:
         "Monitor your team's performance in real-time. Set goals, track progress, and celebrate achievements with our intuitive tracking system.",
-      image: "https://v0.blob.com/aNJXl.png",
+      illustration: <PerformanceIllustration />,
     },
     {
       icon: <PieChart className="h-10 w-10 text-primary" />,
       title: "Customizable Reports",
       description:
         "Create beautiful, informative reports with just a few clicks. Customize layouts, choose metrics, and share insights with stakeholders.",
-      image: "https://v0.blob.com/aNJXm.png",
+      illustration: <ReportsIllustration />,
     },
   ]
 
@@ -373,14 +374,7 @@ function FeaturesSection() {
                 <h3 className="text-xl font-bold">{feature.title}</h3>
               </div>
               <p className="text-muted-foreground mb-4">{feature.description}</p>
-              <div className="relative h-40 w-full overflow-hidden rounded-md">
-                <Image
-                  src={feature.image || "/placeholder.svg"}
-                  alt={feature.title}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-              </div>
+              <div className="relative h-40 w-full overflow-hidden rounded-md">{feature.illustration}</div>
             </div>
           ))}
         </div>
@@ -391,34 +385,60 @@ function FeaturesSection() {
 
 function TestimonialsSection() {
   const { ref, isInView } = useInView()
-  const { ref: testimonialsRef, isInView: testimonialsInView } = useInView({ threshold: 0.1 })
 
   const testimonials = [
     {
       quote:
-        "StreamLine has completely transformed how we manage our projects. The automation features alone have saved us countless hours.",
+        "StreamLine has completely transformed how we manage our projects. The automation features alone have saved us countless hours. I can't imagine running our business without it now.",
       author: "Sarah Johnson",
       role: "CEO, TechStart",
       avatar: "https://v0.blob.com/aNJXn.png",
     },
     {
       quote:
-        "The analytics dashboard provides insights we never had access to before. It's like having a data scientist on the team.",
+        "The analytics dashboard provides insights we never had access to before. It's like having a data scientist on the team. We've been able to make much more informed decisions.",
       author: "Michael Chen",
       role: "Marketing Director, GrowthLabs",
       avatar: "https://v0.blob.com/aNJXo.png",
     },
     {
-      quote: "We've reduced our operational costs by 30% since implementing StreamLine. The ROI has been incredible.",
+      quote:
+        "We've reduced our operational costs by 30% since implementing StreamLine. The ROI has been incredible. The automation tools are game-changing for our workflow.",
       author: "Emily Rodriguez",
       role: "Operations Manager, ScaleUp Inc.",
       avatar: "https://v0.blob.com/aNJXp.png",
     },
+    {
+      quote:
+        "The customer support team is exceptional. They helped us customize the platform to our specific needs and were always available when we had questions.",
+      author: "David Wilson",
+      role: "CTO, Innovate Solutions",
+      avatar: "https://v0.blob.com/aNJXn.png",
+    },
+    {
+      quote:
+        "StreamLine's reporting features have made our monthly board meetings so much more productive. We can visualize our progress and identify areas for improvement at a glance.",
+      author: "Jennifer Lee",
+      role: "CFO, GrowFast Ventures",
+      avatar: "https://v0.blob.com/aNJXo.png",
+    },
   ]
 
   return (
-    <section id="testimonials" className="py-20">
-      <div className="container px-4 md:px-6">
+    <section id="testimonials" className="py-20 overflow-hidden relative">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 -z-10 opacity-30 dark:opacity-20">
+        <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+          <defs>
+            <pattern id="testimonial-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M0 20 L20 0 L40 20 L20 40 Z" fill="none" className="stroke-primary/20" strokeWidth="1" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#testimonial-pattern)" />
+        </svg>
+      </div>
+
+      <div className="container px-4 md:px-6 relative">
         <div
           ref={ref}
           className={cn(
@@ -436,53 +456,9 @@ function TestimonialsSection() {
             </p>
           </div>
         </div>
-        <div ref={testimonialsRef} className="mx-auto grid max-w-5xl gap-6 py-12 lg:grid-cols-3">
-          {testimonials.map((testimonial, index) => (
-            <div
-              key={index}
-              className={cn(
-                "rounded-lg border bg-card p-6 shadow-sm transition-all duration-500 transform hover:shadow-lg hover:-translate-y-2",
-                testimonialsInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10",
-                testimonialsInView ? `delay-[${index * 200}ms]` : "",
-              )}
-            >
-              <div className="flex flex-col gap-4">
-                <div className="flex gap-0.5">
-                  {[...Array(5)].map((_, i) => (
-                    <svg
-                      key={i}
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className={`h-5 w-5 text-yellow-500 transition-all duration-300 ${testimonialsInView ? "animate-in zoom-in-50 fade-in" : ""}`}
-                      style={{ animationDelay: `${i * 100 + 300}ms` }}
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  ))}
-                </div>
-                <blockquote className="text-lg">"{testimonial.quote}"</blockquote>
-                <div className="flex items-center gap-4">
-                  <div className="relative h-10 w-10 overflow-hidden rounded-full">
-                    <Image
-                      src={testimonial.avatar || "/placeholder.svg"}
-                      alt={testimonial.author}
-                      fill
-                      className="object-cover transition-transform duration-500 hover:scale-110"
-                    />
-                  </div>
-                  <div>
-                    <p className="font-semibold">{testimonial.author}</p>
-                    <p className="text-sm text-muted-foreground">{testimonial.role}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+
+        <div className="mt-12">
+          <TestimonialCarousel testimonials={testimonials} />
         </div>
       </div>
     </section>
@@ -501,7 +477,7 @@ function PricingSection() {
       popular: false,
       features: ["Up to 5 team members", "Basic analytics", "5GB storage", "Email support"],
       cta: "Get Started",
-      image: "https://v0.blob.com/aNJXq.png",
+      illustration: <StarterPlanIllustration />,
     },
     {
       name: "Pro",
@@ -516,7 +492,7 @@ function PricingSection() {
         "Custom reporting",
       ],
       cta: "Get Started",
-      image: "https://v0.blob.com/aNJXr.png",
+      illustration: <ProPlanIllustration />,
     },
     {
       name: "Enterprise",
@@ -532,7 +508,7 @@ function PricingSection() {
         "Dedicated account manager",
       ],
       cta: "Contact Sales",
-      image: "https://v0.blob.com/aNJXs.png",
+      illustration: <EnterprisePlanIllustration />,
     },
   ]
 
@@ -571,12 +547,7 @@ function PricingSection() {
               )}
               <div className="flex flex-col gap-4">
                 <div className="relative h-40 w-full overflow-hidden rounded-md mb-4">
-                  <Image
-                    src={plan.image || "/placeholder.svg"}
-                    alt={`${plan.name} Plan`}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
+                  {plan.illustration}
                   <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent"></div>
                   <div className="absolute bottom-2 left-2">
                     <h3 className="text-2xl font-bold">{plan.name}</h3>
@@ -759,31 +730,6 @@ function Footer() {
                     "transition-all duration-500 transform",
                     isInView ? "opacity-100 translate-x-0" : "opacity-0 translate-x-5",
                     isInView ? `delay-[${i * 100 + 500}ms]` : "",
-                  )}
-                >
-                  <Link
-                    href="#"
-                    className="text-muted-foreground hover:text-foreground transition-colors group flex items-center"
-                  >
-                    <span className="relative">
-                      {item}
-                      <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold">Resources</h3>
-            <ul className="mt-4 grid gap-2">
-              {["Documentation", "Support", "API", "Community", "Contact"].map((item, i) => (
-                <li
-                  key={i}
-                  className={cn(
-                    "transition-all duration-500 transform",
-                    isInView ? "opacity-100 translate-x-0" : "opacity-0 translate-x-5",
-                    isInView ? `delay-[${i * 100 + 1000}ms]` : "",
                   )}
                 >
                   <Link
